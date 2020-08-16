@@ -53,6 +53,8 @@ namespace Rotrics.Net
 
         public void MoveToHome()
         {
+            _hasMovedHome = true;
+
             Write("M1112");
         }
 
