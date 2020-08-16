@@ -87,6 +87,17 @@ namespace Rotrics.Net
             Write($"G0 X{x} Y{y} Z{z}");
         }
 
+        public void SendRaw(string command)
+        {
+            Write(command);
+        }
+
+        public string ReadRaw()
+        {
+            // TODO: Add reasonable timeout?
+            return _port.ReadLine();
+        }
+
         public void Dispose()
         {
             _port?.Dispose();

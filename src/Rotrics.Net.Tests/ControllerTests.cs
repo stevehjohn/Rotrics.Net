@@ -124,6 +124,16 @@ namespace Rotrics.Net.Tests
             _port.Verify(p => p.Dispose());
         }
 
+        [Test]
+        public void SendRaw_passes_command_through()
+        {
+            SetupWorkingConnection();
+
+            _controller.SendRaw("G0 X0 Y300 Z0");
+
+            _port.Verify(p => p.Write("G0 X0 Y300 Z0\r\n"));
+        }
+
         private void SetupWorkingConnection()
         {
             _port.Setup(p => p.ReadLine())
