@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using Rotrics.Net.Exceptions;
 
 namespace Rotrics.Net.Tests
 {

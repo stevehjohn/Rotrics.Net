@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Rotrics.Net
+namespace Rotrics.Net.Exceptions
 {
     public class RotricsConnectionException : Exception
     {
