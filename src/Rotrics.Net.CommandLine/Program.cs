@@ -83,7 +83,10 @@ namespace Rotrics.Net.CommandLine
                 File.Delete(options.OutFile);
             }
 
-            using var output = new StreamWriter(options.OutFile);
+            using var output = new StreamWriter(options.OutFile)
+                               {
+                                   AutoFlush = true
+                               };
 
             if (! Connect())
             {
