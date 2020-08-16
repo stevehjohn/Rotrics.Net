@@ -16,6 +16,8 @@ namespace Rotrics.Net.CommandLine
             Parser.Default.ParseArguments<BoundaryScanOptions, InteractiveOptions>(arguments)
                   .WithParsed<BoundaryScanOptions>(BoundaryScan)
                   .WithParsed<InteractiveOptions>(o => { Interactive(); });
+
+            _controller.Dispose();
         }
 
         private static void Interactive()
@@ -78,6 +80,45 @@ namespace Rotrics.Net.CommandLine
             if (! Connect())
             {
                 return;
+            }
+
+            _controller.MoveToHome();
+
+            Wait();
+
+            for (var z = -110; z <= 160; z++)
+            {
+                WriteLine($"Scanning Z{z}");
+
+                _controller.SendRaw($"G0 Z{z}");
+
+                Wait();
+
+                for (var y = 400; y > 0; y--)
+                {
+                    _controller.SendRaw($"G0 Y{y}");
+
+                    var response = _controller.ReadRaw();
+
+                    if (response.Contains("beyond", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        Wait();
+
+                        continue;
+                    }
+
+                    WriteLine($"Y limit is {y}");
+
+                    break;
+                }
+            }
+        }
+
+        private static void Wait()
+        {
+            while (! _controller.ReadRaw().Equals("wait", StringComparison.InvariantCultureIgnoreCase))
+            {
+                Thread.Sleep(10);
             }
         }
 
