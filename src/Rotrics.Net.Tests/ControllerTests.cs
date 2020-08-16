@@ -134,6 +134,19 @@ namespace Rotrics.Net.Tests
             _port.Verify(p => p.Write("G0 X0 Y300 Z0\r\n"));
         }
 
+        [Test]
+        public void ReadRaw_passes_back_received_data()
+        {
+            SetupWorkingConnection();
+
+            _port.Setup(p => p.ReadLine())
+                 .Returns("test");
+
+            var response = _controller.ReadRaw();
+
+            Assert.That(response, Is.EqualTo("test"));
+        }
+
         private void SetupWorkingConnection()
         {
             _port.Setup(p => p.ReadLine())

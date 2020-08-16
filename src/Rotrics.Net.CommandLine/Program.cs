@@ -1,6 +1,7 @@
 ﻿using System;
 using CommandLine;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Threading;
 using static System.Console;
 
@@ -77,6 +78,13 @@ namespace Rotrics.Net.CommandLine
 
         private static void BoundaryScan(BoundaryScanOptions options)
         {
+            if (File.Exists(options.OutFile))
+            {
+                File.Delete(options.OutFile);
+            }
+
+            using var output = new StreamWriter(options.OutFile);
+
             if (! Connect())
             {
                 return;
@@ -109,16 +117,20 @@ namespace Rotrics.Net.CommandLine
 
                     WriteLine($"Y limit is {y}");
 
+                    output.WriteLine($"Z{z} Y{y}");
+
                     break;
                 }
             }
+
+            output.Close();
         }
 
         private static void Wait()
         {
             while (! _controller.ReadRaw().Equals("wait", StringComparison.InvariantCultureIgnoreCase))
             {
-                Thread.Sleep(10);
+                Thread.Sleep(100);
             }
         }
 
