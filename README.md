@@ -4,6 +4,8 @@ SDK for controlling Rotrics robot arm.
 
 ## Usage
 
+Available via NuGet [here](https://www.nuget.org/packages/Rotrics.Net/).
+
 Call `ControllerFactory.GetController()` to get a configured instance of the controller. The controller implements `IDisposable`, so either use within a `using` statement as below or manually call `.Dispose()` when finished with it.
 
 Be sure to call the methods `.Connect()` and `.MoveToHome()` before anything else.
