@@ -1,5 +1,24 @@
 # Rotrics.Net
+
 SDK for controlling Rotrics robot arm.
+
+## Usage
+
+Call `ControllerFactory.GetController()` to get a configured instance of the controller.
+
+Be sure to call the methods `.Connect()` and `.MoveToHome()` before anything else.
+
+So, to get up and running, it's basically:
+
+```C#
+var controller = ControllerFactory.GetController();
+
+controller.Connect(); // Will throw RotricsConnectionException if unable to connect.
+
+controller.MoveToHome();
+
+// Start controlling the arm! Just use IntelliSense to see what methods are currently available.
+```
 
 ## Notes
 

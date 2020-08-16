@@ -1,10 +1,11 @@
-﻿using NUnit.Framework;
-using Rotrics.Net.Communications;
+﻿using System.Diagnostics.CodeAnalysis;
+using NUnit.Framework;
 using Rotrics.Net.Exceptions;
 
 namespace Rotrics.Net.Tests
 {
     [TestFixture]
+    [ExcludeFromCodeCoverage]
     public class ControllerExplicitTests
     {
         private Controller _controller;
@@ -12,7 +13,7 @@ namespace Rotrics.Net.Tests
         [SetUp]
         public void SetUp()
         {
-            _controller = new Controller(new SerialPortEnumeratorFactory(),  new SerialPortFactory());
+            _controller = ControllerFactory.GetController();
         }
 
         [TearDown]

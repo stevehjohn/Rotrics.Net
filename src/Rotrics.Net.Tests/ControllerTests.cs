@@ -74,6 +74,29 @@ namespace Rotrics.Net.Tests
             Assert.Throws<RotricsConnectionException>(() => _controller.Connect());
         }
 
+        [Test]
+        public void Write_throws_exception_if_not_connected()
+        {
+            Assert.Throws<RotricsConnectionException>(() => _controller.MoveToHome());
+        }
+
+        [Test]
+        public void Throws_exception_if_command_attempted_without_MoveToHome_called_first()
+        {
+            _port.Setup(p => p.ReadLine())
+                 .Returns("wait");
+
+            _port.SetupGet(p => p.IsOpen)
+                 .Returns(true);
+
+            _portEnumerator.Setup(pe => pe.GetPortNames())
+                           .Returns(new[] { "COM3" });
+
+            _controller.Connect();
+
+            Assert.Throws<RotricsCommandException>(() => _controller.MoveAbsolute(0, 300, 0));
+        }
+
         private void SetupWorkingConnection()
         {
             _port.Setup(p => p.ReadLine())

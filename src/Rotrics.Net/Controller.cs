@@ -47,6 +47,7 @@ namespace Rotrics.Net
                     throw new RotricsConnectionException($"Unable to open port {port}.");
                 }
 
+                // TODO: Is this really the best way to verify a connection?
                 var response = _port.ReadLine();
 
                 if (response == "wait")
