@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30330.147
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rotrics.Net", "Rotrics.Net\Rotrics.Net.csproj", "{46131794-355E-437D-BB5D-9C1F40FEE350}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rotrics.Net.Tests", "Rotrics.Net.Tests\Rotrics.Net.Tests.csproj", "{89D7EA2C-87D2-4F31-AE5A-E66B80705C6A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{46131794-355E-437D-BB5D-9C1F40FEE350}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46131794-355E-437D-BB5D-9C1F40FEE350}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46131794-355E-437D-BB5D-9C1F40FEE350}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46131794-355E-437D-BB5D-9C1F40FEE350}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89D7EA2C-87D2-4F31-AE5A-E66B80705C6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89D7EA2C-87D2-4F31-AE5A-E66B80705C6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89D7EA2C-87D2-4F31-AE5A-E66B80705C6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89D7EA2C-87D2-4F31-AE5A-E66B80705C6A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DB20FF17-A198-4AF6-A3AE-35D3A904639E}
+	EndGlobalSection
+EndGlobal
