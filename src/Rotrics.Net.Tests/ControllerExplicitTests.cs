@@ -12,7 +12,7 @@ namespace Rotrics.Net.Tests
         [SetUp]
         public void SetUp()
         {
-            _controller = new Controller(new SerialPortFactory());
+            _controller = new Controller(new SerialPortEnumeratorFactory(),  new SerialPortFactory());
         }
 
         [TearDown]

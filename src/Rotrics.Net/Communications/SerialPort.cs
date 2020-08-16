@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.IO.Ports;
-using System.Linq;
 
 namespace Rotrics.Net.Communications
 {

@@ -1,28 +1,30 @@
-﻿using System;
+﻿using Rotrics.Net.Communications;
+using Rotrics.Net.Exceptions;
+using System;
 using System.IO;
 using System.IO.Ports;
-using System.Linq;
-using Rotrics.Net.Communications;
-using Rotrics.Net.Exceptions;
-using SerialPort = System.IO.Ports.SerialPort;
 
 namespace Rotrics.Net
 {
     public class Controller : IDisposable
     {
+        private readonly ISerialPortEnumeratorFactory _portEnumeratorFactory;
         private readonly ISerialPortFactory _portFactory;
 
         private ISerialPort _port;
         private bool _hasMovedHome;
 
-        public Controller(ISerialPortFactory portFactory)
+        public Controller(ISerialPortEnumeratorFactory portEnumeratorFactory, ISerialPortFactory portFactory)
         {
+            _portEnumeratorFactory = portEnumeratorFactory;
             _portFactory = portFactory;
         }
 
         public void Connect()
         {
-            var ports = SerialPort.GetPortNames().Distinct();
+            var portEnumerator = _portEnumeratorFactory.GetSerialPortEnumerator();
+
+            var ports = portEnumerator.GetPortNames();
 
             foreach (var port in ports)
             {
@@ -96,7 +98,7 @@ namespace Rotrics.Net
                 throw new RotricsConnectionException("Not connected to arm.");
             }
 
-            if (!_hasMovedHome)
+            if (! _hasMovedHome)
             {
                 throw new RotricsCommandException("Please issue MoveToHome command before any others.");
             }

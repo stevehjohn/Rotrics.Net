@@ -1,6 +1,8 @@
-﻿using Moq;
+﻿using System.IO;
+using Moq;
 using NUnit.Framework;
 using Rotrics.Net.Communications;
+using Rotrics.Net.Exceptions;
 
 namespace Rotrics.Net.Tests
 {
@@ -8,6 +10,7 @@ namespace Rotrics.Net.Tests
     public class ControllerTests
     {
         private Mock<ISerialPort> _port;
+        private Mock<ISerialPortEnumerator> _portEnumerator;
 
         private Controller _controller;
 
@@ -16,12 +19,19 @@ namespace Rotrics.Net.Tests
         {
             _port = new Mock<ISerialPort>();
 
+            _portEnumerator = new Mock<ISerialPortEnumerator>();
+
             var portFactory = new Mock<ISerialPortFactory>();
 
             portFactory.Setup(f => f.GetSerialPort())
                        .Returns(_port.Object);
 
-            _controller = new Controller(portFactory.Object);
+            var portEnumeratorFactory = new Mock<ISerialPortEnumeratorFactory>();
+
+            portEnumeratorFactory.Setup(f => f.GetSerialPortEnumerator())
+                                 .Returns(_portEnumerator.Object);
+
+            _controller = new Controller(portEnumeratorFactory.Object, portFactory.Object);
         }
 
         [TearDown]
@@ -35,16 +45,49 @@ namespace Rotrics.Net.Tests
         [TestCase(255)]
         public void Passes_correct_value_to_laser_start(byte power)
         {
-            _port.Setup(p => p.ReadLine())
-                 .Returns("wait");
-
-            _controller.Connect();
-
-            _controller.MoveToHome();
+            SetupWorkingConnection();
 
             _controller.StartLaser(power);
 
             _port.Verify(p => p.Write($"M3 S{power}\r\n"));
+        }
+
+        [Test]
+        public void StopLaser_passes_correct_command()
+        {
+            SetupWorkingConnection();
+
+            _controller.StopLaser();
+
+            _port.Verify(p => p.Write("M5\r\n"));
+        }
+
+        [Test]
+        public void Throws_correct_exception_if_unable_to_connect()
+        {
+            _portEnumerator.Setup(pe => pe.GetPortNames())
+                           .Returns(new[] { "COM3" });
+
+            _port.Setup(p => p.Open())
+                 .Throws<FileNotFoundException>();
+
+            Assert.Throws<RotricsConnectionException>(() => _controller.Connect());
+        }
+
+        private void SetupWorkingConnection()
+        {
+            _port.Setup(p => p.ReadLine())
+                 .Returns("wait");
+
+            _port.SetupGet(p => p.IsOpen)
+                 .Returns(true);
+
+            _portEnumerator.Setup(pe => pe.GetPortNames())
+                           .Returns(new[] { "COM3" });
+
+            _controller.Connect();
+
+            _controller.MoveToHome();
         }
     }
 }
