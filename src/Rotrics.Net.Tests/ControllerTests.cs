@@ -1,17 +1,27 @@
-﻿using NUnit.Framework;
-using Rotrics.Net.Exceptions;
+﻿using Moq;
+using NUnit.Framework;
+using Rotrics.Net.Communications;
 
 namespace Rotrics.Net.Tests
 {
     [TestFixture]
     public class ControllerTests
     {
+        private Mock<ISerialPort> _port;
+
         private Controller _controller;
 
         [SetUp]
         public void SetUp()
         {
-            _controller = new Controller();
+            _port = new Mock<ISerialPort>();
+
+            var portFactory = new Mock<ISerialPortFactory>();
+
+            portFactory.Setup(f => f.GetSerialPort())
+                       .Returns(_port.Object);
+
+            _controller = new Controller(portFactory.Object);
         }
 
         [TearDown]
@@ -20,38 +30,21 @@ namespace Rotrics.Net.Tests
             _controller.Dispose();
         }
 
-        [Test]
-        [Explicit]
-        public void Can_connect_to_arm()
+        [TestCase(0)]
+        [TestCase(128)]
+        [TestCase(255)]
+        public void Passes_correct_value_to_laser_start(byte power)
         {
-            Assert.DoesNotThrow(() => _controller.Connect());
-        }
+            _port.Setup(p => p.ReadLine())
+                 .Returns("wait");
 
-        [Test]
-        [Explicit]
-        public void Throws_exception_when_unable_to_connect()
-        {
-            Assert.Throws<RotricsConnectionException>(() => _controller.Connect());
-        }
-
-        [Test]
-        [Explicit]
-        public void Move_to_boundaries()
-        {
             _controller.Connect();
 
             _controller.MoveToHome();
 
-            _controller.MoveAbsolute(-250, 300, 0);
-            _controller.MoveAbsolute(250, 300, 0);
+            _controller.StartLaser(power);
 
-            _controller.MoveAbsolute(0, 180, 0);
-            _controller.MoveAbsolute(0, 390, 0);
-
-            _controller.MoveAbsolute(0, 300, -110);
-            _controller.MoveAbsolute(0, 300, 160);
-
-            _controller.MoveToHome();
+            _port.Verify(p => p.Write($"M3 S{power}\r\n"));
         }
     }
 }

@@ -2,14 +2,23 @@
 using System.IO;
 using System.IO.Ports;
 using System.Linq;
+using Rotrics.Net.Communications;
 using Rotrics.Net.Exceptions;
+using SerialPort = System.IO.Ports.SerialPort;
 
 namespace Rotrics.Net
 {
     public class Controller : IDisposable
     {
-        private SerialPort _port;
+        private readonly ISerialPortFactory _portFactory;
+
+        private ISerialPort _port;
         private bool _hasMovedHome;
+
+        public Controller(ISerialPortFactory portFactory)
+        {
+            _portFactory = portFactory;
+        }
 
         public void Connect()
         {
@@ -17,15 +26,15 @@ namespace Rotrics.Net
 
             foreach (var port in ports)
             {
-                _port = new SerialPort(port)
-                        {
-                            BaudRate = 115200,
-                            Parity = Parity.None,
-                            StopBits = StopBits.One,
-                            DataBits = 8,
-                            Handshake = Handshake.XOnXOff,
-                            DtrEnable = true
-                        };
+                _port = _portFactory.GetSerialPort();
+
+                _port.PortName = port;
+                _port.BaudRate = 115200;
+                _port.Parity = Parity.None;
+                _port.StopBits = StopBits.One;
+                _port.DataBits = 8;
+                _port.Handshake = Handshake.XOnXOff;
+                _port.DtrEnable = true;
 
                 try
                 {
