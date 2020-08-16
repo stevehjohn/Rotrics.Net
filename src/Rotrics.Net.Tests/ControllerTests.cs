@@ -1,8 +1,8 @@
-﻿using System.IO;
-using Moq;
+﻿using Moq;
 using NUnit.Framework;
 using Rotrics.Net.Communications;
 using Rotrics.Net.Exceptions;
+using System.IO;
 
 namespace Rotrics.Net.Tests
 {
@@ -95,6 +95,33 @@ namespace Rotrics.Net.Tests
             _controller.Connect();
 
             Assert.Throws<RotricsCommandException>(() => _controller.MoveAbsolute(0, 300, 0));
+        }
+
+        [Test]
+        public void MoveAbsolute_passes_coordinates_correctly()
+        {
+            SetupWorkingConnection();
+
+            _controller.MoveAbsolute(123, 456, 789);
+
+            _port.Verify(p => p.Write("G0 X123 Y456 Z789\r\n"));
+        }
+
+        [Test]
+        public void Throws_exception_if_unable_to_locate_arm()
+        {
+            Assert.Throws<RotricsConnectionException>(() => _controller.Connect());
+        }
+
+        [Test]
+        public void Connect_disposes_of_unused_ports()
+        {
+            _portEnumerator.Setup(pe => pe.GetPortNames())
+                           .Returns(new[] { "COM3" });
+
+            Assert.Throws<RotricsConnectionException>(() => _controller.Connect());
+
+            _port.Verify(p => p.Dispose());
         }
 
         private void SetupWorkingConnection()

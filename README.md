@@ -4,20 +4,21 @@ SDK for controlling Rotrics robot arm.
 
 ## Usage
 
-Call `ControllerFactory.GetController()` to get a configured instance of the controller.
+Call `ControllerFactory.GetController()` to get a configured instance of the controller. The controller implements `IDisposable`, so either use within a `using` statement as below or manually call `.Dispose()` when finished with it.
 
 Be sure to call the methods `.Connect()` and `.MoveToHome()` before anything else.
 
 So, to get up and running, it's basically:
 
 ```C#
-var controller = ControllerFactory.GetController();
+using (var controller = ControllerFactory.GetController())
+{
+	controller.Connect(); // Will throw RotricsConnectionException if unable to connect.
 
-controller.Connect(); // Will throw RotricsConnectionException if unable to connect.
+	controller.MoveToHome();
 
-controller.MoveToHome();
-
-// Start controlling the arm! Just use IntelliSense to see what methods are currently available.
+	// Start controlling the arm! Just use IntelliSense to see what methods are currently available.
+}
 ```
 
 ## Notes

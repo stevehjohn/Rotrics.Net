@@ -1,5 +1,8 @@
-﻿namespace Rotrics.Net.Communications
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Rotrics.Net.Communications
 {
+    [ExcludeFromCodeCoverage]
     public class SerialPortEnumeratorFactory : ISerialPortEnumeratorFactory
     {
         public ISerialPortEnumerator GetSerialPortEnumerator()
