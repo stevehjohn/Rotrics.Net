@@ -125,6 +125,36 @@ namespace Rotrics.Net.Tests
         }
 
         [Test]
+        public void Grip_sends_correct_command()
+        {
+            SetupWorkingConnection();
+
+            _controller.Grip();
+
+            _port.Verify(p => p.Write("M1001\r\n"));
+        }
+
+        [Test]
+        public void Release_sends_correct_command()
+        {
+            SetupWorkingConnection();
+
+            _controller.Release();
+
+            _port.Verify(p => p.Write("M1002\r\n"));
+        }
+
+        [Test]
+        public void Suck_sends_correct_command()
+        {
+            SetupWorkingConnection();
+
+            _controller.Suck();
+
+            _port.Verify(p => p.Write("M1000\r\n"));
+        }
+
+        [Test]
         public void SendRaw_passes_command_through()
         {
             SetupWorkingConnection();

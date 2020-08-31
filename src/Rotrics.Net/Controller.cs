@@ -87,6 +87,21 @@ namespace Rotrics.Net
             Write($"G0 X{x} Y{y} Z{z}");
         }
 
+        public void Grip()
+        {
+            Write("M1001");
+        }
+
+        public void Release()
+        {
+            Write("M1002");
+        }
+
+        public void Suck()
+        {
+            Write("M1000");
+        }
+
         public void SendRaw(string command)
         {
             Write(command);
